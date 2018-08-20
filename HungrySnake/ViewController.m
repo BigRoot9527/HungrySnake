@@ -10,6 +10,8 @@
 
 @interface ViewController ()
 
+@property (nonatomic) int velocityThreshold;
+
 @end
 
 @implementation ViewController
@@ -19,27 +21,29 @@ enum SettingParameter {
     gameFieldY,
 };
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self guestureSetup];
     self.gameField = [[HSCoordinate alloc] init];
+    _velocityThreshold = 250;
     
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated
+{
     [super viewDidAppear:animated];
     [self inputNewGameWith:gameFieldX];
 }
 
-- (void)guestureSetup {
-    for (int i =0; i < 4; i++) {
-        UISwipeGestureRecognizer *swipeGuesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFrom:)];
-        [swipeGuesture setDirection: 1 << i];
-        [self.view addGestureRecognizer:swipeGuesture];
-    }
+- (void)guestureSetup
+{
+    UIPanGestureRecognizer *panGuesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    [self.view addGestureRecognizer:panGuesture];
 }
 
-- (void)inputNewGameWith:(enum SettingParameter)paramter {
+- (void)inputNewGameWith:(enum SettingParameter)paramter
+{
     NSString *displayString = @"";
     switch (paramter) {
         case gameFieldX:
@@ -77,7 +81,8 @@ enum SettingParameter {
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)invalidAlertWithParameter:(enum SettingParameter)paramter {
+- (void)invalidAlertWithParameter:(enum SettingParameter)paramter
+{
     NSString *errorMessage = @"";
     switch (paramter) {
         case gameFieldX:
@@ -95,7 +100,8 @@ enum SettingParameter {
     [self presentViewController:errorAlert animated:YES completion:nil];
 }
 
-- (void)gameSetup {
+- (void)gameSetup
+{
     self.score = 0;
     self.gameView.isHeadCrashed = false;
     self.snake = [[HSSnake alloc] initWithFieldSize:self.gameField];
@@ -105,7 +111,8 @@ enum SettingParameter {
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.13 target:self selector: @selector(snakeMove) userInfo:nil repeats:YES];
 }
 
-- (void)gameViewSetup {
+- (void)gameViewSetup
+{
     CGFloat widthPadding = 20;
     CGFloat heightPadding = 20;
     CGFloat maxWidth = self.view.bounds.size.width - (widthPadding * 2);
@@ -124,38 +131,27 @@ enum SettingParameter {
     [self.view addSubview: self.gameView];
 }
 
-- (void)handleSwipeFrom: (UISwipeGestureRecognizer *)recognizer {
-    if (recognizer.direction == UISwipeGestureRecognizerDirectionRight) {
-        self.snake.movingDirection = right;
-    }
-    if (recognizer.direction == UISwipeGestureRecognizerDirectionUp) {
-        self.snake.movingDirection = down;
-    }
-    if (recognizer.direction == UISwipeGestureRecognizerDirectionDown) {
-        self.snake.movingDirection = up;
-    }
-    if (recognizer.direction == UISwipeGestureRecognizerDirectionLeft) {
-        self.snake.movingDirection = left;
-    }
-}
-
-- (void)snakeMove {
+- (void)snakeMove
+{
     [self.snake movingAroundFood:self.food.location];
     [self changeGameView];
 }
 
-- (void)changeGameView {
+- (void)changeGameView
+{
     self.gameView.foodPosition = self.food.location;
     self.gameView.bodyPositions = self.snake.bodyPositions;
     [self.gameView setNeedsDisplay];
 }
 
-- (void)getAndDrawNewFood {
+- (void)getAndDrawNewFood
+{
     [self.food generateNewFood];
     [self changeGameView];
 }
 
-- (void)gameStop {
+- (void)gameStop
+{
     [self.timer invalidate];
     self.timer = nil;
     
@@ -167,7 +163,8 @@ enum SettingParameter {
     [self presentViewController:errorAlert animated:YES completion:nil];
 }
 
-- (void)snakeStateDidEatFood:(BOOL)ateFood didCrashIntoBody:(BOOL)isCrashed {
+- (void)snakeStateDidEatFood:(BOOL)ateFood didCrashIntoBody:(BOOL)isCrashed
+{
     if (ateFood) {
         [self getAndDrawNewFood];
         self.score += 1;
@@ -177,6 +174,32 @@ enum SettingParameter {
         [self changeGameView];
         [self gameStop];
     }
+}
+
+- (void)handleGesture:(UIPanGestureRecognizer *)gestureRecognizer
+{
+    CGPoint velocity = [gestureRecognizer velocityInView:self.view];
+    
+    if(velocity.x > _velocityThreshold)
+    {
+        self.snake.nextDirection = right;
+    }
+    
+    if(velocity.x < -_velocityThreshold)
+    {
+        self.snake.nextDirection = left;
+    }
+    
+    if(velocity.y > _velocityThreshold)
+    {
+        self.snake.nextDirection = up;
+    }
+    
+    if(velocity.y < -_velocityThreshold)
+    {
+        self.snake.nextDirection = down;
+    }
+    
 }
 
 @end

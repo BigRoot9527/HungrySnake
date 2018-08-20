@@ -11,24 +11,27 @@
 @interface HSSnake()
 
 @property (nonatomic,strong) HSCoordinate *wallPoint;
+@property (nonatomic) enum HSDirection movedDirection;
 @end
 
 @implementation HSSnake
 
--(id)initWithFieldSize:(HSCoordinate *)farestPoint {
+- (id)initWithFieldSize:(HSCoordinate *)farestPoint
+{
     self = [super init];
     if (self) {
         farestPoint.x = farestPoint.x >= 2 ? farestPoint.x : 2;
         farestPoint.y = farestPoint.y >= 2 ? farestPoint.y : 2;
         self.bodyPositions = [[NSMutableArray alloc] init];
         self.wallPoint = farestPoint;
-        self.movingDirection = left;
+        self.nextDirection = left;
         [self privateSetupPositionWithWallPoint:self.wallPoint];
     }
     return self;
 }
 
--(void)movingAroundFood:(HSCoordinate *)foodLocation {
+- (void)movingAroundFood:(HSCoordinate *)foodLocation
+{
     HSCoordinate *newHead = [self privateGetNewHeadPosition];
     if (newHead.x == foodLocation.x && newHead.y == foodLocation.y) {
         [self privateAteFoodOn:foodLocation];
@@ -37,7 +40,8 @@
     }
 }
 
--(void)privateMovedTo:(HSCoordinate *)location {
+- (void)privateMovedTo:(HSCoordinate *)location
+{
     [self privateDequeue];
     BOOL isCrashIntoBody = [self privateCheckIfCrash:location];
     if (isCrashIntoBody) {
@@ -47,7 +51,8 @@
     [self privateEnqueue:location];
 }
 
--(BOOL)privateCheckIfCrash:(HSCoordinate *)location {
+- (BOOL)privateCheckIfCrash:(HSCoordinate *)location
+{
     for (HSCoordinate *points in self.bodyPositions) {
         if (points.x == location.x && points.y == location.y) {
             return true;
@@ -56,13 +61,15 @@
     return false;
 }
 
--(void)privateAteFoodOn:(HSCoordinate *)location {
+- (void)privateAteFoodOn:(HSCoordinate *)location
+{
     BOOL isCrashIntoBody = [self.bodyPositions containsObject:location];
     [self privateEnqueue:location];
     [self.delegate snakeStateDidEatFood:true didCrashIntoBody:isCrashIntoBody];
 }
 
--(void)privateSetupPositionWithWallPoint:(HSCoordinate*)point {
+- (void)privateSetupPositionWithWallPoint:(HSCoordinate*)point
+{
     NSInteger middleX = point.x % 2 == 0 ? point.x / 2 : point.x / 2 + 1;
     NSInteger middleY = point.y % 2 == 0 ? point.y / 2 : point.y / 2 + 1;
     //initial tail
@@ -71,7 +78,8 @@
     [self privateEnqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX withCoordinateY:middleY]];
 }
 
--(void)privateEnqueue:(HSCoordinate*)point {
+- (void)privateEnqueue:(HSCoordinate*)point
+{
     [self.bodyPositions addObject:point];
 }
 
@@ -86,22 +94,26 @@
     if ([self.bodyPositions.lastObject isKindOfClass:[HSCoordinate class]]) {
         HSCoordinate *oldHeadPoint = self.bodyPositions.lastObject;
         HSCoordinate *newHead = [[HSCoordinate alloc] initWithCoordinateX:oldHeadPoint.x withCoordinateY:oldHeadPoint.y];
-        switch (self.movingDirection) {
+        switch (self.nextDirection) {
             case up:
                 newHead.y += 1;
                 newHead.y = newHead.y > self.wallPoint.y ? 0 : newHead.y;
+                self.movedDirection = up;
                 break;
             case down:
                 newHead.y -= 1;
                 newHead.y = newHead.y < 0 ? self.wallPoint.y : newHead.y;
+                self.movedDirection = down;
                 break;
             case left:
                 newHead.x -= 1;
                 newHead.x = newHead.x < 0 ? self.wallPoint.x : newHead.x;
+                self.movedDirection = left;
                 break;
             case right:
                 newHead.x += 1;
                 newHead.x = newHead.x > self.wallPoint.x ? 0 : newHead.x;
+                self.movedDirection = right;
                 break;
             default:
                 break;
@@ -112,12 +124,13 @@
     return [[HSCoordinate alloc] initWithCoordinateX:0 withCoordinateY:0];
 }
 
--(void)setMovingDirection:(enum HSDirection)movingDirection {
+- (void)setNextDirection:(enum HSDirection)nextDirection
+{
     
-    if (_movingDirection + movingDirection == 3) {
+    if (_movedDirection + nextDirection == 3) {
         //do nothing
     } else {
-        _movingDirection = movingDirection;
+        _nextDirection = nextDirection;
     }
 }
 

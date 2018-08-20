@@ -23,9 +23,9 @@ enum HSDirection {
     down
 };
 @property (nonatomic,strong) NSMutableArray* bodyPositions;
-@property (nonatomic) enum HSDirection movingDirection;
+@property (nonatomic) enum HSDirection nextDirection;
 @property (nonatomic,weak) id<HSSnakeDelegate> delegate;
 -(id)initWithFieldSize:(HSCoordinate *)farestPoint;
 -(void)movingAroundFood:(HSCoordinate *)foodLocation;
--(void)setMovingDirection:(enum HSDirection)movingDirection;
+- (void)setNextDirection:(enum HSDirection)nextDirection;
 @end
