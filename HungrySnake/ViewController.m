@@ -14,11 +14,94 @@
 
 @implementation ViewController
 
+enum SettingParameter {
+    gameFieldX,
+    gameFieldY,
+    snakeSpeed
+};
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self guestureSetup];
-    [self gameSetup];
-    [self gameViewSetup];
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self inputNewGameWith:gameFieldX];
+}
+
+- (void)inputNewGameWith:(enum SettingParameter)paramter {
+    
+    NSString *displayString = @"";
+    
+    switch (paramter) {
+        case gameFieldX:
+            displayString = @"Please input X range(int 1-20)";
+            break;
+        case gameFieldY:
+            displayString = @"Please input Y range(int 1-20)";
+            break;
+        default:
+            displayString = @"Please input Snake Speed(float 1-10)";
+            break;
+    }
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Setup Game" message:displayString preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.keyboardType = UIKeyboardTypeNumberPad;
+    }];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Enter" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        switch (paramter) {
+            case gameFieldX:
+                if ([alert.textFields[0].text integerValue] >= 1 && [alert.textFields[0].text integerValue] <= 20) {
+                    self.gameField.x = [alert.textFields[0].text integerValue];
+                    [self inputNewGameWith:gameFieldY];
+                } else {
+                    [self invalidAlertWithParameter:gameFieldX];
+                }
+                break;
+            case gameFieldY:
+                if ([alert.textFields[0].text integerValue] >= 1 && [alert.textFields[0].text integerValue] <= 20) {
+                    self.gameField.y = [alert.textFields[0].text integerValue];
+                    [self inputNewGameWith:snakeSpeed];
+                } else {
+                    [self invalidAlertWithParameter:gameFieldY];
+                }
+                break;
+            case snakeSpeed:
+                if ([alert.textFields[0].text floatValue] >= 1 && [alert.textFields[0].text floatValue] <= 10) {
+                    self.snakeSpeed = [alert.textFields[0].text floatValue];
+                    [self gameSetup];
+                    [self gameViewSetup];
+                } else {
+                    [self invalidAlertWithParameter:snakeSpeed];
+                }
+                break;
+        }
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)invalidAlertWithParameter:(enum SettingParameter)paramter {
+    NSString *errorMessage = @"";
+    switch (paramter) {
+        case gameFieldX:
+            errorMessage = @"invalid gameFieldX (int 1~20)";
+            break;
+        case gameFieldY:
+            errorMessage = @"invalid gameFieldY (int 1~20)";
+            break;
+        case snakeSpeed:
+            errorMessage = @"invalid snakeSpeed (float 1~10)";
+            break;
+    }
+    
+    UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"OOOPS!" message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
+    [errorAlert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self inputNewGameWith:paramter];
+    }]];
+    [self presentViewController:errorAlert animated:YES completion:nil];
 }
 
 - (void)gameViewSetup {
@@ -49,7 +132,7 @@
     self.snake.delegate = self;
     self.food = [[HSFood alloc] initWithFieldSize:self.gameField];
     [self getAndDrawNewFood];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector: @selector(snakeMove) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1/snakeSpeed target:self selector: @selector(snakeMove) userInfo:nil repeats:YES];
 }
 
 - (void)handleSwipeFrom: (UISwipeGestureRecognizer *)recognizer {

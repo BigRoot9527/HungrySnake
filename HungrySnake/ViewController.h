@@ -19,6 +19,7 @@
 @property (nonatomic) BOOL isCrashed;
 @property (nonatomic,strong) NSTimer *timer;
 @property (nonatomic,strong) GameView *gameView;
+@property (nonatomic) float snakeSpeed;
 
 @end
 
