@@ -25,7 +25,7 @@
 
 - (void)drawRect:(CGRect)rect {
     
-    CGFloat rectLength = self.bounds.size.width / (self.farestPoint.x + 1);
+    CGFloat rectLength = self.bounds.size.width / (self.farestPoint.x+1);
     HSCoordinate *head = self.bodyPositions.lastObject;
     CGContextRef context = UIGraphicsGetCurrentContext();
     

@@ -16,10 +16,9 @@
 @property (nonatomic,strong) HSCoordinate *gameField;
 @property (nonatomic,strong) HSSnake *snake;
 @property (nonatomic,strong) HSFood *food;
-@property (nonatomic) BOOL isCrashed;
 @property (nonatomic,strong) NSTimer *timer;
 @property (nonatomic,strong) GameView *gameView;
-@property (nonatomic) float snakeSpeed;
+@property (nonatomic) int score;
 
 @end
 

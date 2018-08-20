@@ -18,8 +18,8 @@
 -(id)initWithFieldSize:(HSCoordinate *)farestPoint {
     self = [super init];
     if (self) {
-        farestPoint.x = farestPoint.x > 2 ? farestPoint.x : 3;
-        farestPoint.y = farestPoint.y > 3 ? farestPoint.y : 3;
+        farestPoint.x = farestPoint.x >= 2 ? farestPoint.x : 2;
+        farestPoint.y = farestPoint.y >= 2 ? farestPoint.y : 2;
         self.bodyPositions = [[NSMutableArray alloc] init];
         self.wallPoint = farestPoint;
         self.movingDirection = left;
@@ -38,12 +38,13 @@
 }
 
 -(void)privateMovedTo:(HSCoordinate *)location {
-    BOOL isCrashIntoBody = [self privateCheckIfCrash:location];
-    [self privateEnqueue:location];
     [self privateDequeue];
+    BOOL isCrashIntoBody = [self privateCheckIfCrash:location];
     if (isCrashIntoBody) {
         [self.delegate snakeStateDidEatFood:false didCrashIntoBody:true];
+        return;
     }
+    [self privateEnqueue:location];
 }
 
 -(BOOL)privateCheckIfCrash:(HSCoordinate *)location {
