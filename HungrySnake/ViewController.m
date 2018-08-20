@@ -199,7 +199,6 @@ enum SettingParameter {
     {
         self.snake.nextDirection = down;
     }
-    
 }
 
 @end
