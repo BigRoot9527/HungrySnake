@@ -23,8 +23,14 @@
         farestPoint.x = farestPoint.x >= 2 ? farestPoint.x : 2;
         farestPoint.y = farestPoint.y >= 2 ? farestPoint.y : 2;
         self.bodyPositions = [[NSMutableArray alloc] init];
+        self.emptySpace = [[NSMutableArray alloc] init];
         self.wallPoint = farestPoint;
         self.nextDirection = left;
+        for (int i = 0; i <= farestPoint.x; i++){
+            for (int j = 0; j <= farestPoint.y ; j++) {
+                [self.emptySpace addObject: [[HSCoordinate alloc] initWithCoordinateX:i withCoordinateY:j]];
+            }
+        }
         [self privateSetupPositionWithWallPoint:self.wallPoint];
     }
     return self;
@@ -45,7 +51,7 @@
     [self privateDequeue];
     BOOL isCrashIntoBody = [self privateCheckIfCrash:location];
     if (isCrashIntoBody) {
-        [self.delegate snakeStateDidEatFood:false didCrashIntoBody:true];
+        [self.delegate snakeDidCrashIntoBody:true];
         return;
     }
     [self privateEnqueue:location];
@@ -63,9 +69,8 @@
 
 - (void)privateAteFoodOn:(HSCoordinate *)location
 {
-    BOOL isCrashIntoBody = [self.bodyPositions containsObject:location];
     [self privateEnqueue:location];
-    [self.delegate snakeStateDidEatFood:true didCrashIntoBody:isCrashIntoBody];
+    [self.delegate snakeDidEatFoodWithEmptySpace:self.emptySpace];
 }
 
 - (void)privateSetupPositionWithWallPoint:(HSCoordinate*)point
@@ -81,16 +86,26 @@
 - (void)privateEnqueue:(HSCoordinate*)point
 {
     [self.bodyPositions addObject:point];
+    HSCoordinate *tempPoint;
+    for(HSCoordinate *space in self.emptySpace) {
+        if (space.x == point.x && space.y == point.y) {
+            tempPoint = space;
+        }
+    }
+    [self.emptySpace removeObject:tempPoint];
 }
 
--(void)privateDequeue{
+- (void)privateDequeue
+{
     id firstInObject = [self.bodyPositions objectAtIndex: 0];
     if ([firstInObject isKindOfClass:[HSCoordinate class]]) {
         [self.bodyPositions removeObjectAtIndex: 0];
     }
+    [self.emptySpace addObject:firstInObject];
 }
 
--(HSCoordinate*)privateGetNewHeadPosition {
+- (HSCoordinate*)privateGetNewHeadPosition
+{
     if ([self.bodyPositions.lastObject isKindOfClass:[HSCoordinate class]]) {
         HSCoordinate *oldHeadPoint = self.bodyPositions.lastObject;
         HSCoordinate *newHead = [[HSCoordinate alloc] initWithCoordinateX:oldHeadPoint.x withCoordinateY:oldHeadPoint.y];
@@ -126,7 +141,6 @@
 
 - (void)setNextDirection:(enum HSDirection)nextDirection
 {
-    
     if (_movedDirection + nextDirection == 3) {
         //do nothing
     } else {

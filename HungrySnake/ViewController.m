@@ -107,8 +107,8 @@ enum SettingParameter {
     self.snake = [[HSSnake alloc] initWithFieldSize:self.gameField];
     self.snake.delegate = self;
     self.food = [[HSFood alloc] initWithFieldSize:self.gameField];
-    [self getAndDrawNewFood];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.13 target:self selector: @selector(snakeMove) userInfo:nil repeats:YES];
+    [self getAndDrawNewFoodWithEmptySpace:self.snake.emptySpace];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.14 target:self selector: @selector(snakeMove) userInfo:nil repeats:YES];
 }
 
 - (void)gameViewSetup
@@ -117,13 +117,15 @@ enum SettingParameter {
     CGFloat heightPadding = 20;
     CGFloat maxWidth = self.view.bounds.size.width - (widthPadding * 2);
     CGFloat maxHeight = self.view.bounds.size.height - (heightPadding * 2);
-    float gamefieldRate = _gameField.x / _gameField.y;
+    NSInteger xLength = self.gameField.x + 1;
+    NSInteger yLength = self.gameField.y + 1;
+    float gamefieldRate = xLength / yLength;
     float maxRate = maxWidth / maxHeight;
     CGRect displayRect;
     if (gamefieldRate > maxRate) {
-        displayRect = CGRectMake(widthPadding, heightPadding+(maxHeight-(maxWidth / _gameField.x) * _gameField.y)/2, maxWidth, (maxWidth / _gameField.x) * _gameField.y);
+        displayRect = CGRectMake(widthPadding, heightPadding+(maxHeight-(maxWidth / xLength * yLength))/2, maxWidth, (maxWidth / xLength) * yLength);
     } else if (gamefieldRate < maxRate) {
-        displayRect = CGRectMake(widthPadding+(maxWidth-(maxHeight/_gameField.y)*_gameField.x)/2, heightPadding, (maxHeight / _gameField.y) * _gameField.x, maxHeight);
+        displayRect = CGRectMake(widthPadding+(maxWidth-((maxHeight/yLength) *xLength))/2, heightPadding, (maxHeight / yLength) * xLength, maxHeight);
     } else {
         displayRect = CGRectMake(widthPadding, heightPadding, maxWidth, maxHeight);
     }
@@ -144,36 +146,23 @@ enum SettingParameter {
     [self.gameView setNeedsDisplay];
 }
 
-- (void)getAndDrawNewFood
+- (void)getAndDrawNewFoodWithEmptySpace:(NSMutableArray*)space
 {
-    [self.food generateNewFood];
+    [self.food generateNewFoodWithEmptySpace:space];
     [self changeGameView];
 }
 
-- (void)gameStop
+- (void)gameStopOnWin:(BOOL)isWin
 {
     [self.timer invalidate];
     self.timer = nil;
     
-    UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Game Over" message:[NSString stringWithFormat:@"Score:%d",self.score] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:(isWin ? @"You Win!" : @"Game Over") message:[NSString stringWithFormat:@"Score:%d",self.score] preferredStyle:UIAlertControllerStyleAlert];
     [errorAlert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self inputNewGameWith:gameFieldX];
         [self.gameView removeFromSuperview];
     }]];
     [self presentViewController:errorAlert animated:YES completion:nil];
-}
-
-- (void)snakeStateDidEatFood:(BOOL)ateFood didCrashIntoBody:(BOOL)isCrashed
-{
-    if (ateFood) {
-        [self getAndDrawNewFood];
-        self.score += 1;
-    }
-    if (isCrashed) {
-        self.gameView.isHeadCrashed = isCrashed;
-        [self changeGameView];
-        [self gameStop];
-    }
 }
 
 - (void)handleGesture:(UIPanGestureRecognizer *)gestureRecognizer
@@ -201,4 +190,21 @@ enum SettingParameter {
     }
 }
 
+- (void)snakeDidCrashIntoBody:(BOOL)isCrashed {
+    if (isCrashed) {
+        self.gameView.isHeadCrashed = isCrashed;
+        [self changeGameView];
+        [self gameStopOnWin:false];
+    }
+}
+
+- (void)snakeDidEatFoodWithEmptySpace:(NSMutableArray *)emptySpace {
+    self.score += 1;
+    NSLog(@"space.count = %lu",[emptySpace count]);
+    if ([emptySpace count] == 0) {
+        [self gameStopOnWin:true];
+    } else {
+        [self getAndDrawNewFoodWithEmptySpace:emptySpace];
+    }
+}
 @end

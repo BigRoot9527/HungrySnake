@@ -12,7 +12,8 @@
 @class HSSnake;
 
 @protocol HSSnakeDelegate
--(void) snakeStateDidEatFood: (BOOL)ateFood didCrashIntoBody: (BOOL)isCrashed;
+-(void) snakeDidEatFoodWithEmptySpace:(NSMutableArray *)emptySpace;
+-(void) snakeDidCrashIntoBody:(BOOL)isCrashed;
 @end
 
 @interface HSSnake : NSObject
@@ -23,6 +24,7 @@ enum HSDirection {
     down
 };
 @property (nonatomic,strong) NSMutableArray* bodyPositions;
+@property (nonatomic,strong) NSMutableArray *emptySpace;
 @property (nonatomic) enum HSDirection nextDirection;
 @property (nonatomic,weak) id<HSSnakeDelegate> delegate;
 -(id)initWithFieldSize:(HSCoordinate *)farestPoint;

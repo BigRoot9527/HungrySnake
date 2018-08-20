@@ -12,7 +12,7 @@
 @interface HSFood : NSObject
 
 @property (nonatomic,strong) HSCoordinate *location;
--(id)initWithFieldSize:(HSCoordinate *)farestPoint;
--(void)generateNewFood;
+- (id)initWithFieldSize:(HSCoordinate *)farestPoint;
+- (void)generateNewFoodWithEmptySpace:(NSMutableArray *)space;
 
 @end

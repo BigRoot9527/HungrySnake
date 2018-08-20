@@ -16,7 +16,8 @@
 
 @implementation HSFood
 
--(id)initWithFieldSize:(HSCoordinate *)farestPoint {
+- (id)initWithFieldSize:(HSCoordinate *)farestPoint
+{
     self = [super init];
     if (self) {
         self.privateGameField = farestPoint;
@@ -24,13 +25,10 @@
     return self;
 }
 
--(void)generateNewFood {
-    
-    NSInteger randomX = arc4random() % (self.privateGameField.x + 1);
-    
-    NSInteger randomY = arc4random() % (self.privateGameField.y + 1);
-    
-    self.location = [[HSCoordinate alloc] initWithCoordinateX:randomX withCoordinateY:randomY ];
+- (void)generateNewFoodWithEmptySpace:(NSMutableArray *)space
+{
+    NSInteger index = arc4random() % [space count];
+    self.location = [space objectAtIndex:index];
 }
 
 @end
