@@ -14,6 +14,10 @@
 		E6AE27B421256E4500921358 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6AE27B221256E4500921358 /* LaunchScreen.storyboard */; };
 		E6AE27B721256E4500921358 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27B621256E4500921358 /* main.m */; };
 		E6AE27C121256E4500921358 /* HungrySnakeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27C021256E4500921358 /* HungrySnakeTests.m */; };
+		E6AE27CE2125728D00921358 /* HSCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27CD2125728D00921358 /* HSCoordinate.m */; };
+		E6AE27D12125743000921358 /* HSSnake.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27D02125743000921358 /* HSSnake.m */; };
+		E6AE27D92126848900921358 /* HSFood.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27D82126848900921358 /* HSFood.m */; };
+		E6AE27DD2126BB5E00921358 /* GameView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27DC2126BB5E00921358 /* GameView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +44,14 @@
 		E6AE27BC21256E4500921358 /* HungrySnakeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HungrySnakeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6AE27C021256E4500921358 /* HungrySnakeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HungrySnakeTests.m; sourceTree = "<group>"; };
 		E6AE27C221256E4500921358 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E6AE27CC2125728D00921358 /* HSCoordinate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSCoordinate.h; sourceTree = "<group>"; };
+		E6AE27CD2125728D00921358 /* HSCoordinate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCoordinate.m; sourceTree = "<group>"; };
+		E6AE27CF2125743000921358 /* HSSnake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSSnake.h; sourceTree = "<group>"; };
+		E6AE27D02125743000921358 /* HSSnake.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSSnake.m; sourceTree = "<group>"; };
+		E6AE27D72126848900921358 /* HSFood.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSFood.h; sourceTree = "<group>"; };
+		E6AE27D82126848900921358 /* HSFood.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFood.m; sourceTree = "<group>"; };
+		E6AE27DB2126BB5E00921358 /* GameView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameView.h; sourceTree = "<group>"; };
+		E6AE27DC2126BB5E00921358 /* GameView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +93,8 @@
 		E6AE27A621256E4300921358 /* HungrySnake */ = {
 			isa = PBXGroup;
 			children = (
+				E6AE27DA2126BB1700921358 /* View */,
+				E6AE27CB21256E7000921358 /* Model */,
 				E6AE27A721256E4300921358 /* AppDelegate.h */,
 				E6AE27A821256E4300921358 /* AppDelegate.m */,
 				E6AE27AA21256E4300921358 /* ViewController.h */,
@@ -101,6 +115,28 @@
 				E6AE27C221256E4500921358 /* Info.plist */,
 			);
 			path = HungrySnakeTests;
+			sourceTree = "<group>";
+		};
+		E6AE27CB21256E7000921358 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E6AE27CC2125728D00921358 /* HSCoordinate.h */,
+				E6AE27CD2125728D00921358 /* HSCoordinate.m */,
+				E6AE27CF2125743000921358 /* HSSnake.h */,
+				E6AE27D02125743000921358 /* HSSnake.m */,
+				E6AE27D72126848900921358 /* HSFood.h */,
+				E6AE27D82126848900921358 /* HSFood.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E6AE27DA2126BB1700921358 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E6AE27DB2126BB5E00921358 /* GameView.h */,
+				E6AE27DC2126BB5E00921358 /* GameView.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -203,9 +239,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6AE27CE2125728D00921358 /* HSCoordinate.m in Sources */,
 				E6AE27AC21256E4300921358 /* ViewController.m in Sources */,
 				E6AE27B721256E4500921358 /* main.m in Sources */,
 				E6AE27A921256E4300921358 /* AppDelegate.m in Sources */,
+				E6AE27D92126848900921358 /* HSFood.m in Sources */,
+				E6AE27D12125743000921358 /* HSSnake.m in Sources */,
+				E6AE27DD2126BB5E00921358 /* GameView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,7 +402,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9VGZC87X4Y;
 				INFOPLIST_FILE = HungrySnake/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -378,7 +420,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9VGZC87X4Y;
 				INFOPLIST_FILE = HungrySnake/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

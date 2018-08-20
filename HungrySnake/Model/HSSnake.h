@@ -1,0 +1,31 @@
+//
+//  HSSnake.h
+//  HungrySnake
+//
+//  Created by Tingwei Hsu on 2018/8/16.
+//  Copyright © 2018年 Tingwei Hsu. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "HSCoordinate.h"
+
+@class HSSnake;
+
+@protocol HSSnakeDelegate
+-(void) snakeStateDidEatFood: (BOOL)ateFood didCrashIntoBody: (BOOL)isCrashed;
+@end
+
+@interface HSSnake : NSObject
+enum HSDirection {
+    up = 0,
+    left,
+    right,
+    down
+};
+@property (nonatomic,strong) NSMutableArray* bodyPositions;
+@property (nonatomic) enum HSDirection movingDirection;
+@property (nonatomic,weak) id<HSSnakeDelegate> delegate;
+-(id)initWithFieldSize:(HSCoordinate *)farestPoint;
+-(void)movingAroundFood:(HSCoordinate *)foodLocation;
+-(void)setMovingDirection:(enum HSDirection)movingDirection;
+@end
