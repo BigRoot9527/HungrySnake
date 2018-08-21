@@ -13,6 +13,8 @@
 @property (nonatomic,strong) HSCoordinate *wallPoint;
 @property (nonatomic) enum HSDirection movedDirection;
 @property (nonatomic) NSInteger minimumLengh;
+@property (nonatomic) int growthFactor;
+
 @end
 
 @implementation HSSnake
@@ -22,6 +24,7 @@
     self = [super init];
     if (self) {
         self.minimumLengh = 2;
+        self.growthFactor = 0;
         farestPoint.x = farestPoint.x >= self.minimumLengh ? farestPoint.x : self.minimumLengh;
         farestPoint.y = farestPoint.y >= self.minimumLengh ? farestPoint.y : self.minimumLengh;
         self.bodyPositions = [[NSMutableArray alloc] init];
@@ -71,6 +74,7 @@
 
 - (void)privateAteFoodOn:(HSCoordinate *)location
 {
+    self.growthFactor += 1;
     [self privateEnqueue:location];
     [self.delegate snakeDidEatFoodWithEmptySpace:self.emptySpace];
 }
@@ -99,6 +103,10 @@
 
 - (void)privateDequeue
 {
+    if (self.growthFactor > 0) {
+        self.growthFactor -= 1;
+        return;
+    }
     id firstInObject = [self.bodyPositions objectAtIndex: 0];
     if ([firstInObject isKindOfClass:[HSCoordinate class]]) {
         [self.bodyPositions removeObjectAtIndex: 0];
