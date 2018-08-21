@@ -12,6 +12,7 @@
 
 @property (nonatomic,strong) HSCoordinate *wallPoint;
 @property (nonatomic) enum HSDirection movedDirection;
+@property (nonatomic) NSInteger minimumLengh;
 @end
 
 @implementation HSSnake
@@ -20,8 +21,9 @@
 {
     self = [super init];
     if (self) {
-        farestPoint.x = farestPoint.x >= 2 ? farestPoint.x : 2;
-        farestPoint.y = farestPoint.y >= 2 ? farestPoint.y : 2;
+        self.minimumLengh = 2;
+        farestPoint.x = farestPoint.x >= self.minimumLengh ? farestPoint.x : self.minimumLengh;
+        farestPoint.y = farestPoint.y >= self.minimumLengh ? farestPoint.y : self.minimumLengh;
         self.bodyPositions = [[NSMutableArray alloc] init];
         self.emptySpace = [[NSMutableArray alloc] init];
         self.wallPoint = farestPoint;

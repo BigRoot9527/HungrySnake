@@ -13,7 +13,7 @@
 		E6AE27B121256E4500921358 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6AE27B021256E4500921358 /* Assets.xcassets */; };
 		E6AE27B421256E4500921358 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6AE27B221256E4500921358 /* LaunchScreen.storyboard */; };
 		E6AE27B721256E4500921358 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27B621256E4500921358 /* main.m */; };
-		E6AE27C121256E4500921358 /* HungrySnakeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27C021256E4500921358 /* HungrySnakeTests.m */; };
+		E6AE27C121256E4500921358 /* HSSnakeInitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27C021256E4500921358 /* HSSnakeInitTests.m */; };
 		E6AE27CE2125728D00921358 /* HSCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27CD2125728D00921358 /* HSCoordinate.m */; };
 		E6AE27D12125743000921358 /* HSSnake.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27D02125743000921358 /* HSSnake.m */; };
 		E6AE27D92126848900921358 /* HSFood.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27D82126848900921358 /* HSFood.m */; };
@@ -42,7 +42,7 @@
 		E6AE27B521256E4500921358 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6AE27B621256E4500921358 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E6AE27BC21256E4500921358 /* HungrySnakeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HungrySnakeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6AE27C021256E4500921358 /* HungrySnakeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HungrySnakeTests.m; sourceTree = "<group>"; };
+		E6AE27C021256E4500921358 /* HSSnakeInitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSSnakeInitTests.m; sourceTree = "<group>"; };
 		E6AE27C221256E4500921358 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6AE27CC2125728D00921358 /* HSCoordinate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSCoordinate.h; sourceTree = "<group>"; };
 		E6AE27CD2125728D00921358 /* HSCoordinate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCoordinate.m; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 		E6AE27BF21256E4500921358 /* HungrySnakeTests */ = {
 			isa = PBXGroup;
 			children = (
-				E6AE27C021256E4500921358 /* HungrySnakeTests.m */,
+				E6AE27C021256E4500921358 /* HSSnakeInitTests.m */,
 				E6AE27C221256E4500921358 /* Info.plist */,
 			);
 			path = HungrySnakeTests;
@@ -253,7 +253,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6AE27C121256E4500921358 /* HungrySnakeTests.m in Sources */,
+				E6AE27C121256E4500921358 /* HSSnakeInitTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
