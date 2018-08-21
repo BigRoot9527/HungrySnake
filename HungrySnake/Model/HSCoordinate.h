@@ -10,10 +10,8 @@
 
 @interface HSCoordinate : NSObject
 
-@property (nonatomic) NSInteger x;
-@property (nonatomic) NSInteger y;
+- (instancetype)initWithCoordinateX:(NSUInteger)x Y:(NSUInteger)y;
 
--(id)initWithCoordinateX:(NSInteger)x_ withCoordinateY:(NSInteger)y_;
-
-
+@property (readonly, nonatomic) NSUInteger x;
+@property (readonly, nonatomic) NSUInteger y;
 @end

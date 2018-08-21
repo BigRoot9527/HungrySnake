@@ -9,12 +9,12 @@
 #import "HSSnake.h"
 
 @interface HSSnake()
-
+@property (nonatomic,strong) NSMutableArray *bodyPositions;
+@property (nonatomic,strong) NSMutableArray *emptySpace;
 @property (nonatomic,strong) HSCoordinate *wallPoint;
 @property (nonatomic) enum HSDirection movedDirection;
 @property (nonatomic) NSInteger minimumLengh;
-@property (nonatomic) int growthFactor;
-
+@property (nonatomic) NSInteger growthFactor;
 @end
 
 @implementation HSSnake
@@ -25,15 +25,15 @@
     if (self) {
         self.minimumLengh = 2;
         self.growthFactor = 0;
-        farestPoint.x = farestPoint.x >= self.minimumLengh ? farestPoint.x : self.minimumLengh;
-        farestPoint.y = farestPoint.y >= self.minimumLengh ? farestPoint.y : self.minimumLengh;
+        NSAssert(farestPoint.x >= self.minimumLengh, @"Must be larger than minimumLengh");
+        NSAssert(farestPoint.y >= self.minimumLengh, @"Must be larger than minimumLengh");
         self.bodyPositions = [[NSMutableArray alloc] init];
         self.emptySpace = [[NSMutableArray alloc] init];
         self.wallPoint = farestPoint;
-        self.nextDirection = left;
+        self.nextDirection = HSDirectionLeft;
         for (int i = 0; i <= farestPoint.x; i++){
             for (int j = 0; j <= farestPoint.y ; j++) {
-                [self.emptySpace addObject: [[HSCoordinate alloc] initWithCoordinateX:i withCoordinateY:j]];
+                [self.emptySpace addObject: [[HSCoordinate alloc] initWithCoordinateX:i Y:j]];
             }
         }
         [self privateSetupPositionWithWallPoint:self.wallPoint];
@@ -45,16 +45,18 @@
 {
     HSCoordinate *newHead = [self privateGetNewHeadPosition];
     if (newHead.x == foodLocation.x && newHead.y == foodLocation.y) {
-        [self privateAteFoodOn:foodLocation];
+        [self _ateFoodOn:foodLocation];
     } else {
-        [self privateMovedTo:newHead];
+        [self _movedTo:newHead];
     }
 }
 
-- (void)privateMovedTo:(HSCoordinate *)location
+#pragma mark - Private methods
+
+- (void)_movedTo:(HSCoordinate *)location
 {
-    [self privateDequeue];
-    BOOL isCrashIntoBody = [self privateCheckIfCrash:location];
+    [self _dequeue];
+    BOOL isCrashIntoBody = [self _checkIfCrash:location];
     if (isCrashIntoBody) {
         [self.delegate snakeDidCrashIntoBody:true];
         return;
@@ -62,7 +64,7 @@
     [self privateEnqueue:location];
 }
 
-- (BOOL)privateCheckIfCrash:(HSCoordinate *)location
+- (BOOL)_checkIfCrash:(HSCoordinate *)location
 {
     for (HSCoordinate *points in self.bodyPositions) {
         if (points.x == location.x && points.y == location.y) {
@@ -72,7 +74,7 @@
     return false;
 }
 
-- (void)privateAteFoodOn:(HSCoordinate *)location
+- (void)_ateFoodOn:(HSCoordinate *)location
 {
     self.growthFactor += 1;
     [self privateEnqueue:location];
@@ -84,9 +86,9 @@
     NSInteger middleX = point.x % 2 == 0 ? point.x / 2 : point.x / 2 + 1;
     NSInteger middleY = point.y % 2 == 0 ? point.y / 2 : point.y / 2 + 1;
     //initial tail
-    [self privateEnqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX+1 withCoordinateY:middleY]];
+    [self privateEnqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX+1 Y:middleY]];
     //initail head
-    [self privateEnqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX withCoordinateY:middleY]];
+    [self privateEnqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX Y:middleY]];
 }
 
 - (void)privateEnqueue:(HSCoordinate*)point
@@ -101,61 +103,64 @@
     [self.emptySpace removeObject:tempPoint];
 }
 
-- (void)privateDequeue
+- (void)_dequeue
 {
     if (self.growthFactor > 0) {
         self.growthFactor -= 1;
         return;
     }
-    id firstInObject = [self.bodyPositions objectAtIndex: 0];
-    if ([firstInObject isKindOfClass:[HSCoordinate class]]) {
+    id firstInObject = self.bodyPositions.firstObject;
+    if (firstInObject) {
         [self.bodyPositions removeObjectAtIndex: 0];
+        [self.emptySpace addObject:firstInObject];
     }
-    [self.emptySpace addObject:firstInObject];
 }
 
 - (HSCoordinate*)privateGetNewHeadPosition
 {
-    if ([self.bodyPositions.lastObject isKindOfClass:[HSCoordinate class]]) {
-        HSCoordinate *oldHeadPoint = self.bodyPositions.lastObject;
-        HSCoordinate *newHead = [[HSCoordinate alloc] initWithCoordinateX:oldHeadPoint.x withCoordinateY:oldHeadPoint.y];
-        switch (self.nextDirection) {
-            case up:
-                newHead.y += 1;
-                newHead.y = newHead.y > self.wallPoint.y ? 0 : newHead.y;
-                self.movedDirection = up;
-                break;
-            case down:
-                newHead.y -= 1;
-                newHead.y = newHead.y < 0 ? self.wallPoint.y : newHead.y;
-                self.movedDirection = down;
-                break;
-            case left:
-                newHead.x -= 1;
-                newHead.x = newHead.x < 0 ? self.wallPoint.x : newHead.x;
-                self.movedDirection = left;
-                break;
-            case right:
-                newHead.x += 1;
-                newHead.x = newHead.x > self.wallPoint.x ? 0 : newHead.x;
-                self.movedDirection = right;
-                break;
-            default:
-                break;
-        }
-        return newHead;
+    HSCoordinate *oldHeadPoint = self.bodyPositions.lastObject;
+    if (!oldHeadPoint) {
+        return [[HSCoordinate alloc] initWithCoordinateX:0 Y:0];
     }
-    //error occurs here
-    return [[HSCoordinate alloc] initWithCoordinateX:0 withCoordinateY:0];
+    NSInteger newX = oldHeadPoint.x;
+    NSInteger newY = oldHeadPoint.y;
+    switch (self.nextDirection) {
+        case HSDirectionUp:
+            newY += 1;
+            newY = newY > self.wallPoint.y ? 0 : newY;
+            self.movedDirection = HSDirectionUp;
+            break;
+        case HSDirectionDown:
+            newY -= 1;
+            newY = newY < 0 ? self.wallPoint.y : newY;
+            self.movedDirection = HSDirectionDown;
+            break;
+        case HSDirectionLeft:
+            newX -= 1;
+            newX = newX < 0 ? self.wallPoint.x : newX;
+            self.movedDirection = HSDirectionLeft;
+            break;
+        case HSDirectionRight:
+            newX += 1;
+            newX = newX > self.wallPoint.x ? 0 : newX;
+            self.movedDirection = HSDirectionRight;
+            break;
+        default:
+            break;
+    }
+    HSCoordinate *newHead = [[HSCoordinate alloc] initWithCoordinateX:newX Y:newY];
+    return newHead;
 }
+
+#pragma mark -
 
 - (void)setNextDirection:(enum HSDirection)nextDirection
 {
     if (_movedDirection + nextDirection == 3) {
-        //do nothing
-    } else {
-        _nextDirection = nextDirection;
+        return;
     }
+    _nextDirection = nextDirection;
 }
 
 @end
+

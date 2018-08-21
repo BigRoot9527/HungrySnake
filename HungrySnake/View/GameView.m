@@ -10,23 +10,19 @@
 
 @implementation GameView
 
-- (instancetype)initWithFrame:(CGRect)frame fieldFarestPoint:(HSCoordinate *)farestPoint snakeBodies:(NSMutableArray *)bodies foodPosition:(HSCoordinate *)food isCrashed:(BOOL)isCrashed
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        _bodyPositions = bodies;
-        _foodPosition = food;
-        _isHeadCrashed = isCrashed;
-        _farestPoint = farestPoint;
-    }
-    [self setNeedsDisplay];
-    return self;
-}
-
 - (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if (!self.delegate) {
+        return;
+    }
     
-    CGFloat rectLength = self.bounds.size.width / (self.farestPoint.x+1);
-    HSCoordinate *head = self.bodyPositions.lastObject;
+    HSCoordinate *farestPoint = [self.delegate farestPointForView:self];
+    NSArray <HSCoordinate *> *bodyPositions = [self.delegate snakeBodyForView:self];
+    HSCoordinate *foodPosition = [self.delegate foodPositionForView:self];
+    BOOL _isHeadCrashed = [self.delegate isHeadCrashForView:self];
+    
+    CGFloat rectLength = self.bounds.size.width / (farestPoint.x+1);
+    HSCoordinate *head = bodyPositions.lastObject;
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
@@ -37,7 +33,7 @@
     
     CGContextSetFillColorWithColor(context, [[UIColor greenColor] CGColor]);
     CGContextSetLineWidth(context, 2.0);
-    for (HSCoordinate *point in self.bodyPositions) {
+    for (HSCoordinate *point in bodyPositions) {
         CGContextAddRect(context, CGRectMake(rectLength*point.x, rectLength*point.y, rectLength, rectLength));
         CGContextDrawPath(context, kCGPathFillStroke);
     }
@@ -46,7 +42,7 @@
     CGContextDrawPath(context, kCGPathFillStroke);
     
     CGContextSetFillColorWithColor(context, [[UIColor purpleColor] CGColor]);
-    CGContextAddArc(context, rectLength*self.foodPosition.x + (rectLength/2), rectLength*self.foodPosition.y + (rectLength/2), rectLength/2, 0, M_PI * 2.0, 0);
+    CGContextAddArc(context, rectLength * foodPosition.x + (rectLength/2), rectLength*foodPosition.y + (rectLength/2), rectLength/2, 0, M_PI * 2.0, 0);
     CGContextDrawPath(context, kCGPathFill);
 }
 

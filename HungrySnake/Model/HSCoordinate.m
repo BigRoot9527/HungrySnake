@@ -8,14 +8,19 @@
 
 #import "HSCoordinate.h"
 
+@interface HSCoordinate ()
+@property (nonatomic) NSUInteger x;
+@property (nonatomic) NSUInteger y;
+@end
+
 @implementation HSCoordinate
 
--(id)initWithCoordinateX:(NSInteger)x_ withCoordinateY:(NSInteger)y_ {
+-(id)initWithCoordinateX:(NSUInteger)x Y:(NSUInteger)y {
     
     self = [super init];
     if (self) {
-        self.x = x_ >= 0 ? x_ : 0;
-        self.y = y_ >= 0 ? y_ : 0;
+        self.x = x;
+        self.y = y;
     }
     return  self;
 }

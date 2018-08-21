@@ -9,13 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "HSCoordinate.h"
 
+@class GameView;
+@protocol GameViewDelegate
+- (HSCoordinate *)farestPointForView:(GameView *)view;
+- (NSArray<HSCoordinate *> *)snakeBodyForView:(GameView *)view;
+- (HSCoordinate *)foodPositionForView:(GameView *)view;
+- (BOOL)isHeadCrashForView:(GameView *)view;
+@end
+
 @interface GameView : UIView
 
-@property (nonatomic, strong) HSCoordinate *farestPoint;
-@property (nonatomic, strong) NSMutableArray *bodyPositions;
-@property (nonatomic, strong) HSCoordinate *foodPosition;
-@property (nonatomic) BOOL isHeadCrashed;
-
-- (instancetype)initWithFrame:(CGRect)frame fieldFarestPoint:(HSCoordinate *)farestPoint snakeBodies:(NSMutableArray *)bodies foodPosition:(HSCoordinate *)food isCrashed:(BOOL)isCrashed;
-
+@property (nonatomic, weak) id<GameViewDelegate> delegate;
 @end

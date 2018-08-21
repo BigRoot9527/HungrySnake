@@ -16,18 +16,18 @@
 -(void) snakeDidCrashIntoBody:(BOOL)isCrashed;
 @end
 
-@interface HSSnake : NSObject
-enum HSDirection {
-    up = 0,
-    left,
-    right,
-    down
+typedef NS_ENUM(NSInteger, HSDirection) {
+    HSDirectionUp = 0,
+    HSDirectionLeft,
+    HSDirectionRight,
+    HSDirectionDown
 };
-@property (nonatomic,strong) NSMutableArray* bodyPositions;
-@property (nonatomic,strong) NSMutableArray *emptySpace;
+
+@interface HSSnake : NSObject
+- (instancetype)initWithFieldSize:(HSCoordinate *)farestPoint;
+
 @property (nonatomic) enum HSDirection nextDirection;
 @property (nonatomic,weak) id<HSSnakeDelegate> delegate;
--(id)initWithFieldSize:(HSCoordinate *)farestPoint;
--(void)movingAroundFood:(HSCoordinate *)foodLocation;
-- (void)setNextDirection:(enum HSDirection)nextDirection;
+
+- (void)movingAroundFood:(HSCoordinate *)foodLocation;
 @end

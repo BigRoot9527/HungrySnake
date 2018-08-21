@@ -7,18 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HSSnake.h"
-#import "HSFood.h"
-#import "GameView.h"
 
-@interface ViewController : UIViewController<HSSnakeDelegate>
+@interface ViewController : UIViewController
 
-@property (nonatomic,strong) HSCoordinate *gameField;
-@property (nonatomic,strong) HSSnake *snake;
-@property (nonatomic,strong) HSFood *food;
-@property (nonatomic,strong) NSTimer *timer;
-@property (nonatomic,strong) GameView *gameView;
-@property (nonatomic) int score;
 
 @end
 

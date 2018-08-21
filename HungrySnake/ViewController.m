@@ -7,16 +7,33 @@
 //
 
 #import "ViewController.h"
+#import "HSSnake.h"
+#import "HSFood.h"
+#import "GameView.h"
 
-@interface ViewController ()
-
-@property (nonatomic) int velocityThreshold;
-
+@interface ViewController () <HSSnakeDelegate>
+@property (nonatomic,strong) HSCoordinate *gameField;
+@property (nonatomic,strong) HSSnake *snake;
+@property (nonatomic,strong) HSFood *food;
+@property (nonatomic,strong) NSTimer *timer;
+@property (nonatomic,strong) GameView *gameView;
+@property (nonatomic, assign) BOOL isHeadCrashed;
+@property (nonatomic) NSInteger score;
+@property (nonatomic) NSInteger velocityThreshold;
 @end
+
+@interface ViewController(GameViewDelegate) <GameViewDelegate>
+@end
+
+@interface HSCoordinate (Private)
+@property (nonatomic) NSInteger x;
+@property (nonatomic) NSInteger y;
+@end
+
 
 @implementation ViewController
 
-enum SettingParameter {
+typedef NS_ENUM(NSUInteger, SettingParameter) {
     gameFieldX,
     gameFieldY,
 };
@@ -24,25 +41,24 @@ enum SettingParameter {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self guestureSetup];
+    [self setupGestures];
     self.gameField = [[HSCoordinate alloc] init];
     _velocityThreshold = 250;
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self inputNewGameWith:gameFieldX];
+    [self askInputForParameter:gameFieldX];
 }
 
-- (void)guestureSetup
+- (void)setupGestures
 {
     UIPanGestureRecognizer *panGuesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
     [self.view addGestureRecognizer:panGuesture];
 }
 
-- (void)inputNewGameWith:(enum SettingParameter)paramter
+- (void)askInputForParameter:(SettingParameter)paramter
 {
     NSString *displayString = @"";
     switch (paramter) {
@@ -62,18 +78,18 @@ enum SettingParameter {
             case gameFieldX:
                 if ([alert.textFields[0].text integerValue] >= 3 && [alert.textFields[0].text integerValue] <= 20) {
                     self.gameField.x = [alert.textFields[0].text integerValue] - 1;
-                    [self inputNewGameWith:gameFieldY];
+                    [self askInputForParameter:gameFieldY];
                 } else {
-                    [self invalidAlertWithParameter:gameFieldX];
+                    [self showErrorForParameter:gameFieldX];
                 }
                 break;
             case gameFieldY:
                 if ([alert.textFields[0].text integerValue] >= 3 && [alert.textFields[0].text integerValue] <= 20) {
                     self.gameField.y = [alert.textFields[0].text integerValue] - 1;
-                    [self gameSetup];
-                    [self gameViewSetup];
+                    [self setupGame];
+                    [self setupGameView];
                 } else {
-                    [self invalidAlertWithParameter:gameFieldY];
+                    [self showErrorForParameter:gameFieldY];
                 }
                 break;
         }
@@ -81,7 +97,7 @@ enum SettingParameter {
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)invalidAlertWithParameter:(enum SettingParameter)paramter
+- (void)showErrorForParameter:(SettingParameter)paramter
 {
     NSString *errorMessage = @"";
     switch (paramter) {
@@ -95,15 +111,14 @@ enum SettingParameter {
     
     UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"OOOPS!" message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
     [errorAlert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self inputNewGameWith:paramter];
+        [self askInputForParameter:paramter];
     }]];
     [self presentViewController:errorAlert animated:YES completion:nil];
 }
 
-- (void)gameSetup
+- (void)setupGame
 {
     self.score = 0;
-    self.gameView.isHeadCrashed = false;
     self.snake = [[HSSnake alloc] initWithFieldSize:self.gameField];
     self.snake.delegate = self;
     self.food = [[HSFood alloc] initWithFieldSize:self.gameField];
@@ -111,7 +126,7 @@ enum SettingParameter {
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.14 target:self selector: @selector(snakeMove) userInfo:nil repeats:YES];
 }
 
-- (void)gameViewSetup
+- (void)setupGameView
 {
     CGFloat widthPadding = 20;
     CGFloat heightPadding = 20;
@@ -129,7 +144,14 @@ enum SettingParameter {
     } else {
         displayRect = CGRectMake(widthPadding, heightPadding, maxWidth, maxHeight);
     }
-    self.gameView = [[GameView alloc] initWithFrame:displayRect fieldFarestPoint: self.gameField snakeBodies:self.snake.bodyPositions foodPosition:self.food.location isCrashed:false];
+    
+    if (self.gameView) {
+        [self.gameView removeFromSuperview];
+        self.gameView = nil;
+    }
+    
+    self.gameView = [[GameView alloc] initWithFrame:displayRect];
+    self.gameView.delegate = self;
     [self.view addSubview: self.gameView];
 }
 
@@ -141,8 +163,6 @@ enum SettingParameter {
 
 - (void)changeGameView
 {
-    self.gameView.foodPosition = self.food.location;
-    self.gameView.bodyPositions = self.snake.bodyPositions;
     [self.gameView setNeedsDisplay];
 }
 
@@ -157,9 +177,9 @@ enum SettingParameter {
     [self.timer invalidate];
     self.timer = nil;
     
-    UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:(isWin ? @"You Win!" : @"Game Over") message:[NSString stringWithFormat:@"Score:%d",self.score] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:(isWin ? @"You Win!" : @"Game Over") message:[NSString stringWithFormat:@"Score:%lu", self.score] preferredStyle:UIAlertControllerStyleAlert];
     [errorAlert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self inputNewGameWith:gameFieldX];
+        [self askInputForParameter:gameFieldX];
         [self.gameView removeFromSuperview];
     }]];
     [self presentViewController:errorAlert animated:YES completion:nil];
@@ -171,28 +191,28 @@ enum SettingParameter {
     
     if(velocity.x > _velocityThreshold)
     {
-        self.snake.nextDirection = right;
+        self.snake.nextDirection = HSDirectionRight;
     }
     
     if(velocity.x < -_velocityThreshold)
     {
-        self.snake.nextDirection = left;
+        self.snake.nextDirection = HSDirectionLeft;
     }
     
     if(velocity.y > _velocityThreshold)
     {
-        self.snake.nextDirection = up;
+        self.snake.nextDirection = HSDirectionUp;
     }
     
     if(velocity.y < -_velocityThreshold)
     {
-        self.snake.nextDirection = down;
+        self.snake.nextDirection = HSDirectionDown;
     }
 }
 
 - (void)snakeDidCrashIntoBody:(BOOL)isCrashed {
     if (isCrashed) {
-        self.gameView.isHeadCrashed = isCrashed;
+        self.isHeadCrashed = isCrashed;
         [self changeGameView];
         [self gameStopOnWin:false];
     }
@@ -208,3 +228,24 @@ enum SettingParameter {
     }
 }
 @end
+
+
+@implementation ViewController (GameViewDelegate)
+- (HSCoordinate *)farestPointForView:(GameView *)view {
+    return self.gameField;
+}
+
+- (HSCoordinate *)foodPositionForView:(GameView *)view {
+    return self.food.location;
+}
+
+- (BOOL)isHeadCrashForView:(GameView *)view {
+    return self.isHeadCrashed;
+}
+
+- (NSArray<HSCoordinate *> *)snakeBodyForView:(GameView *)view {
+    return self.snake.bodyPositions;
+}
+
+@end
+
