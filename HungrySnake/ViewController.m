@@ -125,7 +125,7 @@ enum SettingParameter {
     if (gamefieldRate > maxRate) {
         displayRect = CGRectMake(widthPadding, heightPadding+(maxHeight-(maxWidth / xLength * yLength))/2, maxWidth, (maxWidth / xLength) * yLength);
     } else if (gamefieldRate < maxRate) {
-        displayRect = CGRectMake(widthPadding+(maxWidth-((maxHeight/yLength) *xLength))/2, heightPadding, (maxHeight / yLength) * xLength, maxHeight);
+        displayRect = CGRectMake(widthPadding+(maxWidth-(maxHeight / yLength * xLength))/2, heightPadding, (maxHeight / yLength) * xLength, maxHeight);
     } else {
         displayRect = CGRectMake(widthPadding, heightPadding, maxWidth, maxHeight);
     }
