@@ -9,25 +9,32 @@
 #import <Foundation/Foundation.h>
 #import "HSCoordinate.h"
 
+typedef NS_ENUM(NSInteger, HSDirection) {
+    HSDirectionUp = 1,
+    HSDirectionLeft = 2,
+    HSDirectionRight = 3,
+    HSDirectionDown = 4
+};
+
 @class HSSnake;
 
 @protocol HSSnakeDelegate
--(void) snakeDidEatFoodWithEmptySpace:(NSMutableArray *)emptySpace;
--(void) snakeDidCrashIntoBody:(BOOL)isCrashed;
+- (void)snakeDidGainHeadOn:(HSCoordinate *)headPoint snake:(HSSnake *)snake;
+- (void)snakeDidLostTailOn:(HSCoordinate *)tailPoint snake:(HSSnake *)snake;
+- (void)snakeDidCrashIntoBody:(HSSnake *)snake;
+- (void)snakeDidEatFood:(HSSnake *)snake;
+- (void)snakeDidUpdateBody:(NSArray<HSCoordinate *> *)body snake:(HSSnake *)snake;
 @end
 
-typedef NS_ENUM(NSInteger, HSDirection) {
-    HSDirectionUp = 0,
-    HSDirectionLeft,
-    HSDirectionRight,
-    HSDirectionDown
-};
+@protocol HSSnakeDataSource
+- (HSDirection)userDirectionForSnake:(HSSnake *)snake;
+- (HSCoordinate *)foodLocationForSnake:(HSSnake *)snake;
+@end
 
 @interface HSSnake : NSObject
-- (instancetype)initWithFieldSize:(HSCoordinate *)farestPoint;
-
-@property (nonatomic) enum HSDirection nextDirection;
+- (instancetype)initWithGameField:(HSCoordinate *)farestPoint;
 @property (nonatomic,weak) id<HSSnakeDelegate> delegate;
+@property (nonatomic,weak) id<HSSnakeDataSource> dataSource;
+- (void)move;
 
-- (void)movingAroundFood:(HSCoordinate *)foodLocation;
 @end

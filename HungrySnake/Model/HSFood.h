@@ -9,10 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "HSCoordinate.h"
 
-@interface HSFood : NSObject
+@class HSFood;
+@protocol HSFoodDelegate
+- (void)noPosibleSpaceForFood:(HSFood *)food;
+@end
 
+@interface HSFood : NSObject
 @property (nonatomic,strong) HSCoordinate *location;
-- (id)initWithFieldSize:(HSCoordinate *)farestPoint;
-- (void)generateNewFoodWithEmptySpace:(NSMutableArray *)space;
+@property (nonatomic,weak) id<HSFoodDelegate> delegate;
+- (void)generateNewFoodWithEmptySpace:(NSArray<HSCoordinate *> *)space;
 
 @end

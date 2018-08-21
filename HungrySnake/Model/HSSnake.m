@@ -9,46 +9,37 @@
 #import "HSSnake.h"
 
 @interface HSSnake()
-@property (nonatomic,strong) NSMutableArray *bodyPositions;
-@property (nonatomic,strong) NSMutableArray *emptySpace;
 @property (nonatomic,strong) HSCoordinate *wallPoint;
-@property (nonatomic) enum HSDirection movedDirection;
-@property (nonatomic) NSInteger minimumLengh;
-@property (nonatomic) NSInteger growthFactor;
+@property (nonatomic) enum HSDirection oldDirection;
+@property (nonatomic,strong) NSMutableArray *bodyPositions;
+@property (nonatomic) NSInteger growthCount;
 @end
 
 @implementation HSSnake
 
-- (id)initWithFieldSize:(HSCoordinate *)farestPoint
+- (instancetype)initWithGameField:(HSCoordinate *)farestPoint
 {
     self = [super init];
     if (self) {
-        self.minimumLengh = 2;
-        self.growthFactor = 0;
-        NSAssert(farestPoint.x >= self.minimumLengh, @"Must be larger than minimumLengh");
-        NSAssert(farestPoint.y >= self.minimumLengh, @"Must be larger than minimumLengh");
         self.bodyPositions = [[NSMutableArray alloc] init];
-        self.emptySpace = [[NSMutableArray alloc] init];
         self.wallPoint = farestPoint;
-        self.nextDirection = HSDirectionLeft;
-        for (int i = 0; i <= farestPoint.x; i++){
-            for (int j = 0; j <= farestPoint.y ; j++) {
-                [self.emptySpace addObject: [[HSCoordinate alloc] initWithCoordinateX:i Y:j]];
-            }
-        }
+        self.oldDirection = 0;
+        self.growthCount = 0;
         [self privateSetupPositionWithWallPoint:self.wallPoint];
     }
     return self;
 }
 
-- (void)movingAroundFood:(HSCoordinate *)foodLocation
+- (void)move
 {
     HSCoordinate *newHead = [self privateGetNewHeadPosition];
+    HSCoordinate *foodLocation = [self.dataSource foodLocationForSnake:self];
     if (newHead.x == foodLocation.x && newHead.y == foodLocation.y) {
         [self _ateFoodOn:foodLocation];
     } else {
         [self _movedTo:newHead];
     }
+    [self.delegate snakeDidUpdateBody:[self.bodyPositions copy] snake:self];
 }
 
 #pragma mark - Private methods
@@ -58,7 +49,7 @@
     [self _dequeue];
     BOOL isCrashIntoBody = [self _checkIfCrash:location];
     if (isCrashIntoBody) {
-        [self.delegate snakeDidCrashIntoBody:true];
+        [self.delegate snakeDidCrashIntoBody:self];
         return;
     }
     [self privateEnqueue:location];
@@ -76,9 +67,9 @@
 
 - (void)_ateFoodOn:(HSCoordinate *)location
 {
-    self.growthFactor += 1;
+    self.growthCount += 1;
     [self privateEnqueue:location];
-    [self.delegate snakeDidEatFoodWithEmptySpace:self.emptySpace];
+    [self.delegate snakeDidEatFood:self];
 }
 
 - (void)privateSetupPositionWithWallPoint:(HSCoordinate*)point
@@ -94,25 +85,19 @@
 - (void)privateEnqueue:(HSCoordinate*)point
 {
     [self.bodyPositions addObject:point];
-    HSCoordinate *tempPoint;
-    for(HSCoordinate *space in self.emptySpace) {
-        if (space.x == point.x && space.y == point.y) {
-            tempPoint = space;
-        }
-    }
-    [self.emptySpace removeObject:tempPoint];
+    [self.delegate snakeDidGainHeadOn:point snake:self];
 }
 
 - (void)_dequeue
 {
-    if (self.growthFactor > 0) {
-        self.growthFactor -= 1;
+    if (self.growthCount > 0) {
+        self.growthCount -= 1;
         return;
     }
-    id firstInObject = self.bodyPositions.firstObject;
+    HSCoordinate *firstInObject = self.bodyPositions.firstObject;
     if (firstInObject) {
         [self.bodyPositions removeObjectAtIndex: 0];
-        [self.emptySpace addObject:firstInObject];
+        [self.delegate snakeDidLostTailOn:firstInObject snake:self];
     }
 }
 
@@ -124,26 +109,27 @@
     }
     NSInteger newX = oldHeadPoint.x;
     NSInteger newY = oldHeadPoint.y;
-    switch (self.nextDirection) {
+    HSDirection nextDirection = [self privateGetNextDirection];
+    switch (nextDirection) {
         case HSDirectionUp:
             newY += 1;
             newY = newY > self.wallPoint.y ? 0 : newY;
-            self.movedDirection = HSDirectionUp;
+            self.oldDirection = HSDirectionUp;
             break;
         case HSDirectionDown:
             newY -= 1;
             newY = newY < 0 ? self.wallPoint.y : newY;
-            self.movedDirection = HSDirectionDown;
+            self.oldDirection = HSDirectionDown;
             break;
         case HSDirectionLeft:
             newX -= 1;
             newX = newX < 0 ? self.wallPoint.x : newX;
-            self.movedDirection = HSDirectionLeft;
+            self.oldDirection = HSDirectionLeft;
             break;
         case HSDirectionRight:
             newX += 1;
             newX = newX > self.wallPoint.x ? 0 : newX;
-            self.movedDirection = HSDirectionRight;
+            self.oldDirection = HSDirectionRight;
             break;
         default:
             break;
@@ -152,15 +138,18 @@
     return newHead;
 }
 
-#pragma mark -
-
-- (void)setNextDirection:(enum HSDirection)nextDirection
+- (HSDirection)privateGetNextDirection
 {
-    if (_movedDirection + nextDirection == 3) {
-        return;
+    //initial
+    if (self.oldDirection == 0) {
+        return HSDirectionLeft;
     }
-    _nextDirection = nextDirection;
+    
+    HSDirection newDirection = [self.dataSource userDirectionForSnake:self];
+    if (self.oldDirection + newDirection == 5) {
+        return self.oldDirection;
+    }
+    return newDirection;
 }
-
 @end
 

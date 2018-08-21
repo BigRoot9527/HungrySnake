@@ -15,7 +15,7 @@
 
 @implementation HSCoordinate
 
--(id)initWithCoordinateX:(NSUInteger)x Y:(NSUInteger)y {
+-(instancetype)initWithCoordinateX:(NSUInteger)x Y:(NSUInteger)y {
     
     self = [super init];
     if (self) {

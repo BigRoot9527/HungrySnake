@@ -8,27 +8,16 @@
 
 #import "HSFood.h"
 
-@interface HSFood()
-
-@property(nonatomic, strong) HSCoordinate *privateGameField;
-
-@end
-
 @implementation HSFood
 
-- (id)initWithFieldSize:(HSCoordinate *)farestPoint
+- (void)generateNewFoodWithEmptySpace:(NSArray<HSCoordinate *> *)space;
 {
-    self = [super init];
-    if (self) {
-        self.privateGameField = farestPoint;
+    if ([space count] == 0) {
+        self.location = nil;
+        [self.delegate noPosibleSpaceForFood:self];
+        return;
     }
-    return self;
-}
-
-- (void)generateNewFoodWithEmptySpace:(NSMutableArray *)space
-{
     NSInteger index = arc4random() % [space count];
     self.location = [space objectAtIndex:index];
 }
-
 @end
