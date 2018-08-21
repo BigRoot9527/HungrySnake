@@ -67,6 +67,7 @@
     XCTAssertEqual(self.snake.wallPoint.x, self.stubYInvalidField.x);
     XCTAssertEqual(self.snake.wallPoint.y, self.snake.minimumLengh);
     XCTAssertEqual([self.snake.bodyPositions count], 2);
+    XCTAssertEqual([self.snake.emptySpace count], (self.snake.minimumLengh + 1) * (self.stubYInvalidField.x + 1) - 2);
 }
 
 - (void)test_initWithFieldSize_withAllInvalidField_expectEqual {
@@ -74,6 +75,7 @@
     XCTAssertEqual(self.snake.wallPoint.x, self.snake.minimumLengh);
     XCTAssertEqual(self.snake.wallPoint.y, self.snake.minimumLengh);
     XCTAssertEqual([self.snake.bodyPositions count], 2);
+    XCTAssertEqual([self.snake.emptySpace count], (self.snake.minimumLengh + 1) * (self.snake.minimumLengh + 1));
 }
 
 - (void)testPerformanceExample {
