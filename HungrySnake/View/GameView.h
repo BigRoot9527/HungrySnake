@@ -14,10 +14,9 @@
 - (HSCoordinate *)farestPointForView:(GameView *)view;
 - (NSArray<HSCoordinate *> *)snakeBodyForView:(GameView *)view;
 - (HSCoordinate *)foodPositionForView:(GameView *)view;
-- (BOOL)isHeadCrashForView:(GameView *)view;
 @end
 
 @interface GameView : UIView
-
 @property (nonatomic, weak) id<GameViewDelegate> delegate;
+@property (nonatomic) BOOL isCrashMode;
 @end

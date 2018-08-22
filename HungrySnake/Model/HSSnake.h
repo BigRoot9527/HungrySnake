@@ -8,13 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "HSCoordinate.h"
-
-typedef NS_ENUM(NSInteger, HSDirection) {
-    HSDirectionUp = 1,
-    HSDirectionLeft = 2,
-    HSDirectionRight = 3,
-    HSDirectionDown = 4
-};
+#import "HSDirection.h"
 
 @class HSSnake;
 
@@ -23,7 +17,6 @@ typedef NS_ENUM(NSInteger, HSDirection) {
 - (void)snakeDidLostTailOn:(HSCoordinate *)tailPoint snake:(HSSnake *)snake;
 - (void)snakeDidCrashIntoBody:(HSSnake *)snake;
 - (void)snakeDidEatFood:(HSSnake *)snake;
-- (void)snakeDidUpdateBody:(NSArray<HSCoordinate *> *)body snake:(HSSnake *)snake;
 @end
 
 @protocol HSSnakeDataSource
@@ -35,6 +28,7 @@ typedef NS_ENUM(NSInteger, HSDirection) {
 - (instancetype)initWithGameField:(HSCoordinate *)farestPoint;
 @property (nonatomic,weak) id<HSSnakeDelegate> delegate;
 @property (nonatomic,weak) id<HSSnakeDataSource> dataSource;
+- (void)setup;
 - (void)move;
-
+- (NSArray<HSCoordinate *> *)getBodyPosition;
 @end
