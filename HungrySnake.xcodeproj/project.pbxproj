@@ -19,7 +19,6 @@
 		E6AE27D92126848900921358 /* HSFoodProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27D82126848900921358 /* HSFoodProvider.m */; };
 		E6AE27DD2126BB5E00921358 /* GameView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27DC2126BB5E00921358 /* GameView.m */; };
 		E6AE27E0212C045600921358 /* HSGameManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27DF212C045600921358 /* HSGameManager.m */; };
-		E6AE27E3212CFBEF00921358 /* HSDirection.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27E2212CFBEF00921358 /* HSDirection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,8 +55,7 @@
 		E6AE27DC2126BB5E00921358 /* GameView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameView.m; sourceTree = "<group>"; };
 		E6AE27DE212C045600921358 /* HSGameManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSGameManager.h; sourceTree = "<group>"; };
 		E6AE27DF212C045600921358 /* HSGameManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSGameManager.m; sourceTree = "<group>"; };
-		E6AE27E1212CFBEF00921358 /* HSDirection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSDirection.h; sourceTree = "<group>"; };
-		E6AE27E2212CFBEF00921358 /* HSDirection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSDirection.m; sourceTree = "<group>"; };
+		E6AE27E4212D4DD000921358 /* HSDirection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSDirection.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,10 +124,9 @@
 		E6AE27CB21256E7000921358 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E6AE27E4212D4DD000921358 /* HSDirection.h */,
 				E6AE27CC2125728D00921358 /* HSCoordinate.h */,
 				E6AE27CD2125728D00921358 /* HSCoordinate.m */,
-				E6AE27E1212CFBEF00921358 /* HSDirection.h */,
-				E6AE27E2212CFBEF00921358 /* HSDirection.m */,
 				E6AE27DE212C045600921358 /* HSGameManager.h */,
 				E6AE27DF212C045600921358 /* HSGameManager.m */,
 				E6AE27CF2125743000921358 /* HSSnake.h */,
@@ -249,7 +246,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6AE27E3212CFBEF00921358 /* HSDirection.m in Sources */,
 				E6AE27CE2125728D00921358 /* HSCoordinate.m in Sources */,
 				E6AE27E0212C045600921358 /* HSGameManager.m in Sources */,
 				E6AE27AC21256E4300921358 /* ViewController.m in Sources */,

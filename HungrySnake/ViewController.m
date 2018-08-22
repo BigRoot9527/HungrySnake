@@ -24,14 +24,8 @@
 
 @interface ViewController(HSGameManagerDelegate)<HSGameManagerDelegate>
 @end
-//@interface HSCoordinate (Private)
-//@property (nonatomic) NSInteger x;
-//@property (nonatomic) NSInteger y;
-//@end
-
 
 @implementation ViewController
-
 typedef NS_ENUM(NSUInteger, SettingParameter) {
     gameFieldX,
     gameFieldY,
@@ -183,16 +177,19 @@ typedef NS_ENUM(NSUInteger, SettingParameter) {
 @end
 
 @implementation ViewController (HSGameManagerDelegate)
-- (void)gameDidupdate:(HSGameManager *)manager {
+- (void)gameDidupdate:(HSGameManager *)manager
+{
     [self.gameView setNeedsDisplay];
 }
 
-- (void)snakeDidCrashIntoBodyInGame:(HSGameManager *)manager gotScore:(NSInteger)score {
+- (void)snakeDidCrashIntoBodyInGame:(HSGameManager *)manager gotScore:(NSInteger)score
+{
     self.gameView.isCrashMode = YES;
     [self showGameOverAlertIsWin:NO getScore:score];
 }
 
-- (void)snakeDidWinTheGameInGame:(HSGameManager *)manager gotScore:(NSInteger)score {
+- (void)snakeDidWinTheGameInGame:(HSGameManager *)manager gotScore:(NSInteger)score
+{
     [self showGameOverAlertIsWin:YES getScore:score];
 }
 
@@ -205,22 +202,22 @@ typedef NS_ENUM(NSUInteger, SettingParameter) {
     }]];
     [self presentViewController:errorAlert animated:YES completion:nil];
 }
-
-
 @end
 
 @implementation ViewController (GameViewDelegate)
-- (HSCoordinate *)farestPointForView:(GameView *)view {
+- (HSCoordinate *)farestPointForView:(GameView *)view
+{
     return [self.gameManager getFarestPoint];
 }
 
-- (HSCoordinate *)foodPositionForView:(GameView *)view {
+- (HSCoordinate *)foodPositionForView:(GameView *)view
+{
     return [self.gameManager getFoodLocation];
 }
 
-- (NSArray<HSCoordinate *> *)snakeBodyForView:(GameView *)view {
+- (NSArray<HSCoordinate *> *)snakeBodyForView:(GameView *)view
+{
     return [self.gameManager getSnakeBody];
 }
-
 @end
 

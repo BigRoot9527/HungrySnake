@@ -6,7 +6,8 @@
 //  Copyright © 2018年 Tingwei Hsu. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#ifndef HSDirection_h
+#define HSDirection_h
 
 typedef NS_ENUM(NSInteger, HSDirection) {
     HSDirectionUp = 1,
@@ -15,6 +16,4 @@ typedef NS_ENUM(NSInteger, HSDirection) {
     HSDirectionDown = 4
 };
 
-
-@interface HSDirectionObject : NSObject
-@end
+#endif /* HSDirection_h */
