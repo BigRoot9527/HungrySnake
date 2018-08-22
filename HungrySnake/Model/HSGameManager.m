@@ -29,7 +29,6 @@
 @end
 
 @implementation HSGameManager
-
 - (instancetype)init
 {
     self = [super init];
@@ -103,7 +102,6 @@
     [self.snake move];
     [self.delegate gameDidupdate:self];
 }
-
 @end
 
 @implementation HSGameManager(HSSnakeDataSource)

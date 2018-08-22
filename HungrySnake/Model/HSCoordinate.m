@@ -14,7 +14,6 @@
 @end
 
 @implementation HSCoordinate
-
 -(instancetype)initWithCoordinateX:(NSUInteger)x Y:(NSUInteger)y {
     
     self = [super init];
@@ -24,5 +23,4 @@
     }
     return  self;
 }
-
 @end

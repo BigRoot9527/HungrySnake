@@ -16,7 +16,6 @@
 @end
 
 @implementation HSSnake
-
 - (instancetype)initWithGameField:(HSCoordinate *)farestPoint
 {
     self = [super init];
@@ -51,7 +50,6 @@
 }
 
 #pragma mark - Private methods
-
 - (void)_movedTo:(HSCoordinate *)location
 {
     BOOL isCrashIntoBody = [self _checkIfCrash:location];

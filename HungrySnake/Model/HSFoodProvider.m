@@ -13,7 +13,6 @@
 @end
 
 @implementation HSFoodProvider
-
 - (HSCoordinate*)generateNewFoodWithEmptySpace:(NSArray<HSCoordinate *> *)space
 {
     if ([space count] == 0) {
@@ -29,5 +28,4 @@
 {
     return self.foodLocation;
 }
-
 @end

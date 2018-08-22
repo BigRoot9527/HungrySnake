@@ -12,8 +12,6 @@
 @class HSFoodProvider;
 
 @interface HSFoodProvider : NSObject
-
 - (HSCoordinate*)generateNewFoodWithEmptySpace:(NSArray<HSCoordinate *> *)space;
 - (HSCoordinate*)getFoodLocation;
-
 @end

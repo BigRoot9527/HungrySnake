@@ -8,12 +8,10 @@
 
 #ifndef HSDirection_h
 #define HSDirection_h
-
 typedef NS_ENUM(NSInteger, HSDirection) {
     HSDirectionUp = 1,
     HSDirectionLeft = 2,
     HSDirectionRight = 3,
     HSDirectionDown = 4
 };
-
 #endif /* HSDirection_h */
