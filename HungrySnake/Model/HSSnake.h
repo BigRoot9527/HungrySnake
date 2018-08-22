@@ -16,19 +16,14 @@
 - (void)snakeDidGainHeadOn:(HSCoordinate *)headPoint snake:(HSSnake *)snake;
 - (void)snakeDidLostTailOn:(HSCoordinate *)tailPoint snake:(HSSnake *)snake;
 - (void)snakeDidCrashIntoBody:(HSSnake *)snake;
-- (void)snakeDidEatFood:(HSSnake *)snake;
-@end
-
-@protocol HSSnakeDataSource
-- (HSDirection)userDirectionForSnake:(HSSnake *)snake;
-- (HSCoordinate *)foodLocationForSnake:(HSSnake *)snake;
 @end
 
 @interface HSSnake : NSObject
-- (instancetype)initWithGameField:(HSCoordinate *)farestPoint;
 @property (nonatomic,weak) id<HSSnakeDelegate> delegate;
-@property (nonatomic,weak) id<HSSnakeDataSource> dataSource;
+- (instancetype)initWithGameField:(HSCoordinate *)farestPoint;
+- (void)changeDirectionTo:(HSDirection)direction;
 - (void)setup;
 - (void)move;
+- (void)growth:(NSUInteger)count;
 - (NSArray<HSCoordinate *> *)getBodyPosition;
 @end

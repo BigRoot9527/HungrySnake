@@ -11,6 +11,7 @@
 @interface HSSnake()
 @property (nonatomic,strong) HSCoordinate *wallPoint;
 @property (nonatomic) enum HSDirection oldDirection;
+@property (nonatomic) enum HSDirection nextDirection;
 @property (nonatomic,strong) NSMutableArray *bodyPositions;
 @property (nonatomic) NSInteger growthCount;
 @end
@@ -23,6 +24,7 @@
         self.bodyPositions = [[NSMutableArray alloc] init];
         self.wallPoint = farestPoint;
         self.oldDirection = 0;
+        self.nextDirection = HSDirectionLeft;
         self.growthCount = 0;
     }
     return self;
@@ -36,12 +38,12 @@
 - (void)move
 {
     HSCoordinate *newHead = [self _getNewHeadPosition];
-    HSCoordinate *foodLocation = [self.dataSource foodLocationForSnake:self];
-    if (newHead.x == foodLocation.x && newHead.y == foodLocation.y) {
-        [self _ateFoodOn:foodLocation];
-    } else {
-        [self _movedTo:newHead];
-    }
+    [self _movedTo:newHead];
+}
+
+- (void)growth:(NSUInteger)count
+{
+    self.growthCount += count;
 }
 
 - (NSArray<HSCoordinate *> *)getBodyPosition
@@ -49,7 +51,25 @@
     return [self.bodyPositions copy];
 }
 
+- (void)changeDirectionTo:(HSDirection)direction
+{
+    if (direction + self.oldDirection == 5) {
+        return;
+    }
+    self.nextDirection = direction;
+}
+
 #pragma mark - Private methods
+- (void)_setupPositionWithWallPoint:(HSCoordinate*)point
+{
+    NSInteger middleX = point.x % 2 == 0 ? point.x / 2 : point.x / 2 + 1;
+    NSInteger middleY = point.y % 2 == 0 ? point.y / 2 : point.y / 2 + 1;
+    //initial tail
+    [self _enqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX+1 Y:middleY]];
+    //initail head
+    [self _enqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX Y:middleY]];
+}
+
 - (void)_movedTo:(HSCoordinate *)location
 {
     BOOL isCrashIntoBody = [self _checkIfCrash:location];
@@ -57,8 +77,8 @@
         [self.delegate snakeDidCrashIntoBody:self];
         return;
     }
-    [self _dequeue];
     [self _enqueue:location];
+    [self _dequeue];
 }
 
 - (BOOL)_checkIfCrash:(HSCoordinate *)location
@@ -71,23 +91,6 @@
         }
     }
     return false;
-}
-
-- (void)_ateFoodOn:(HSCoordinate *)location
-{
-    self.growthCount += 1;
-    [self _enqueue:location];
-    [self.delegate snakeDidEatFood:self];
-}
-
-- (void)_setupPositionWithWallPoint:(HSCoordinate*)point
-{
-    NSInteger middleX = point.x % 2 == 0 ? point.x / 2 : point.x / 2 + 1;
-    NSInteger middleY = point.y % 2 == 0 ? point.y / 2 : point.y / 2 + 1;
-    //initial tail
-    [self _enqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX+1 Y:middleY]];
-    //initail head
-    [self _enqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX Y:middleY]];
 }
 
 - (void)_enqueue:(HSCoordinate*)point
@@ -117,8 +120,7 @@
     }
     NSInteger newX = oldHeadPoint.x;
     NSInteger newY = oldHeadPoint.y;
-    HSDirection nextDirection = [self _getNextDirection];
-    switch (nextDirection) {
+    switch (self.nextDirection) {
         case HSDirectionUp:
             newY += 1;
             newY = newY > self.wallPoint.y ? 0 : newY;
@@ -144,20 +146,6 @@
     }
     HSCoordinate *newHead = [[HSCoordinate alloc] initWithCoordinateX:newX Y:newY];
     return newHead;
-}
-
-- (HSDirection)_getNextDirection
-{
-    //initial
-    if (self.oldDirection == 0) {
-        return HSDirectionLeft;
-    }
-    
-    HSDirection newDirection = [self.dataSource userDirectionForSnake:self];
-    if (self.oldDirection + newDirection == 5) {
-        return self.oldDirection;
-    }
-    return newDirection;
 }
 @end
 
