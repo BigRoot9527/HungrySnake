@@ -18,7 +18,6 @@
 @property (nonatomic) NSInteger score;
 @property (nonatomic) BOOL snakeCrashed;
 @property (nonatomic,strong) NSTimer *snakeTimer;
-
 @end
 
 @interface HSGameManager(HSSnakeDelegate)<HSSnakeDelegate>
@@ -103,10 +102,15 @@
     self.score += 1;
     [self.snake growth:2];
     if (![self.foodProvider generateNewFoodWithEmptySpace: [self.emptySpace copy]]) {
-        [self.delegate snakeDidWinTheGameInGame:self gotScore:self.score];
-        [self _gameStop];
+        [self _snakeWin];
     }
     [self.delegate gameDidupdate:self];
+}
+
+- (void)_snakeWin
+{
+    [self.delegate snakeDidWinTheGameInGame:self gotScore:self.score];
+    [self _gameStop];
 }
 @end
 

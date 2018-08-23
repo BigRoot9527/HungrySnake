@@ -19,7 +19,10 @@
 		E6AE27D92126848900921358 /* HSFoodProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27D82126848900921358 /* HSFoodProvider.m */; };
 		E6AE27DD2126BB5E00921358 /* GameView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27DC2126BB5E00921358 /* GameView.m */; };
 		E6AE27E0212C045600921358 /* HSGameManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27DF212C045600921358 /* HSGameManager.m */; };
-		E6AE27E7212D776500921358 /* SpySnakeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27E6212D776500921358 /* SpySnakeDelegate.m */; };
+		E6AE27E7212D776500921358 /* MockSnakeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27E6212D776500921358 /* MockSnakeDelegate.m */; };
+		E6AE27EC212E65F100921358 /* HSGameManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27EB212E65F100921358 /* HSGameManagerTests.m */; };
+		E6AE27F5212E66DB00921358 /* MockGameManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE27F4212E66DB00921358 /* MockGameManagerDelegate.m */; };
+		E6AE2803212EA60200921358 /* HSFoodProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AE2802212EA60200921358 /* HSFoodProviderTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,8 +60,12 @@
 		E6AE27DE212C045600921358 /* HSGameManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSGameManager.h; sourceTree = "<group>"; };
 		E6AE27DF212C045600921358 /* HSGameManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSGameManager.m; sourceTree = "<group>"; };
 		E6AE27E4212D4DD000921358 /* HSDirection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSDirection.h; sourceTree = "<group>"; };
-		E6AE27E5212D776500921358 /* SpySnakeDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpySnakeDelegate.h; sourceTree = "<group>"; };
-		E6AE27E6212D776500921358 /* SpySnakeDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpySnakeDelegate.m; sourceTree = "<group>"; };
+		E6AE27E5212D776500921358 /* MockSnakeDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockSnakeDelegate.h; sourceTree = "<group>"; };
+		E6AE27E6212D776500921358 /* MockSnakeDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MockSnakeDelegate.m; sourceTree = "<group>"; };
+		E6AE27EB212E65F100921358 /* HSGameManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSGameManagerTests.m; sourceTree = "<group>"; };
+		E6AE27F3212E66DB00921358 /* MockGameManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockGameManagerDelegate.h; sourceTree = "<group>"; };
+		E6AE27F4212E66DB00921358 /* MockGameManagerDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MockGameManagerDelegate.m; sourceTree = "<group>"; };
+		E6AE2802212EA60200921358 /* HSFoodProviderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFoodProviderTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,8 +126,12 @@
 			isa = PBXGroup;
 			children = (
 				E6AE27C021256E4500921358 /* HSSnakeTests.m */,
-				E6AE27E5212D776500921358 /* SpySnakeDelegate.h */,
-				E6AE27E6212D776500921358 /* SpySnakeDelegate.m */,
+				E6AE27E5212D776500921358 /* MockSnakeDelegate.h */,
+				E6AE27E6212D776500921358 /* MockSnakeDelegate.m */,
+				E6AE27EB212E65F100921358 /* HSGameManagerTests.m */,
+				E6AE27F3212E66DB00921358 /* MockGameManagerDelegate.h */,
+				E6AE27F4212E66DB00921358 /* MockGameManagerDelegate.m */,
+				E6AE2802212EA60200921358 /* HSFoodProviderTests.m */,
 				E6AE27C221256E4500921358 /* Info.plist */,
 			);
 			path = HungrySnakeTests;
@@ -266,8 +277,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6AE27E7212D776500921358 /* SpySnakeDelegate.m in Sources */,
+				E6AE27F5212E66DB00921358 /* MockGameManagerDelegate.m in Sources */,
+				E6AE2803212EA60200921358 /* HSFoodProviderTests.m in Sources */,
+				E6AE27E7212D776500921358 /* MockSnakeDelegate.m in Sources */,
 				E6AE27C121256E4500921358 /* HSSnakeTests.m in Sources */,
+				E6AE27EC212E65F100921358 /* HSGameManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

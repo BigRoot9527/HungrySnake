@@ -8,10 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "HSCoordinate.h"
+#import "HSSnake.h"
 
-@interface SpySnakeDelegate : NSObject
-@property (nonatomic) BOOL isDelegateCalled;
+@interface MockSnakeDelegate : NSObject <HSSnakeDelegate>
 @property (nonatomic) BOOL snakeDidCrashIntoBody;
 @property (nonatomic, strong) HSCoordinate *snakeGainedHead;
 @property (nonatomic, strong) HSCoordinate *snakeLostTail;
+@property (nonatomic, strong) HSSnake *callingSnake;
+@property (nonatomic) NSInteger headGainCount;
+@property (nonatomic) NSInteger tailLostCount;
 @end

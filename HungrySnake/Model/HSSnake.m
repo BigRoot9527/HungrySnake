@@ -62,8 +62,8 @@
 #pragma mark - Private methods
 - (void)_setupPositionWithWallPoint:(HSCoordinate*)point
 {
-    NSInteger middleX = point.x % 2 == 0 ? point.x / 2 : point.x / 2 + 1;
-    NSInteger middleY = point.y % 2 == 0 ? point.y / 2 : point.y / 2 + 1;
+    NSInteger middleX = point.x / 2;
+    NSInteger middleY = point.y / 2;
     //initial tail
     [self _enqueue:[[HSCoordinate alloc] initWithCoordinateX:middleX+1 Y:middleY]];
     //initail head
